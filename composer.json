@@ -1,0 +1,37 @@
+{
+    "name": "syaiful6/otphp",
+    "description": "OT",
+    "homepage": "",
+    "type": "library",
+    "keywords": ["ot"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Syaiful Bahri",
+            "email": "syaiful@pengunjungblog.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "pusher/pusher-php-server": "~2.6.0",
+        "yetanotherape/diff-match-patch": "~1.0.1",
+        "wrench/wrench": "~2.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "TextOperation\\" : "src"
+        },
+        "files": [
+            "src/utils.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TextOperation\\Tests\\": "tests"
+        }
+    },
+    "minimum-stability": "dev"
+}
