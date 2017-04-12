@@ -1,25 +1,43 @@
 <?php
+
 namespace TextOperation;
 
 class DefaultServerWorker implements ServerWorker
 {
-	protected $document;
+    /**
+     * @var string
+     */
+    protected $document;
 
-	protected $backend;
+    /**
+     * @var TextOperation\ServerBackend
+     */
+    protected $backend;
 
-	/**
-	 *
-	 */
-	public function __construct($document, ServerBackend $backend)
-	{
-		$this->document = $document;
+    /**
+     * constructor. Create DefaultServerWorker with initial document and ServerBackend
+     * instance (used when save the operation).
+     *
+     * @var string
+     * @var TextOperation\ServerBackend $backend
+     *
+     * @param mixed $document
+     */
+    public function __construct($document, ServerBackend $backend)
+    {
+        $this->document = $document;
         $this->backend = $backend;
-	}
+    }
 
     /**
      * Transforms an operation coming from a client against all concurrent
      * operation, applies it to the current document and returns the operation
      * to send to the clients.
+     *
+     * @param mixed $user_id
+     * @param mixed $docid
+     * @param mixed $revision
+     * @param mixed $operation
      */
     public function receiveOperation($user_id, $docid, $revision, $operation)
     {
@@ -34,6 +52,7 @@ class DefaultServerWorker implements ServerWorker
         $this->document = $operation->apply($this->document);
         $this->backend->save($docid, $this->document);
         $this->backend->saveOperation($user_id, $id, $operation);
+
         return $operation;
     }
 }

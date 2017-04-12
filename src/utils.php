@@ -1,47 +1,79 @@
 <?php
+
 namespace TextOperation;
 
-function is_retain($s) {
-  return is_int($s) && $s > 0;
+/**
+ * The format of Operational Transformation like this:
+ * 1. If the type is string then it Insert operation
+ * 2. If the type is integer and it greater than 0 then it Retain
+ * 3. Otherwise it Delete operation (integer and less than 0).
+ *
+ * @param mixed $s
+ */
+function is_retain($s)
+{
+    return is_int($s) && $s > 0;
 }
 
-function is_delete($s) {
-  return is_int($s) && $s < 0;
+function is_delete($s)
+{
+    return is_int($s) && $s < 0;
 }
 
-function is_insert($s) {
-  return is_string($s);
+function is_insert($s)
+{
+    return is_string($s);
 }
 
-function oplength($s) {
-  if (is_int($s)) {
-    if ($s < 0) return -$s;
-    return $s;
-  }
-  return mb_strlen($s);
+function oplength($s)
+{
+    if (is_int($s)) {
+        if ($s < 0) {
+            return -$s;
+        }
+
+        return $s;
+    }
+
+    return mb_strlen($s);
 }
 
-function opshorten($op, $by) {
-    if (is_string($op)) return mb_substr($op, $by);
-    if ($op < 0) return $op + $by;
+function opshorten($op, $by)
+{
+    if (is_string($op)) {
+        return mb_substr($op, $by);
+    }
+    if ($op < 0) {
+        return $op + $by;
+    }
+
     return $op - $by;
 }
 
-function opshorten_pair($a, $b) {
+function opshorten_pair($a, $b)
+{
     $len_a = oplength($a);
     $len_b = oplength($b);
 
-    if ($len_a === $len_b) return [null, null];
-    if ($len_a > $len_b) return [opshorten($a, $len_b), null];
+    if ($len_a === $len_b) {
+        return [null, null];
+    }
+    if ($len_a > $len_b) {
+        return [opshorten($a, $len_b), null];
+    }
+
     return [null, opshorten($b, $len_a)];
 }
 
-function opFromJSON($json) {
+function opFromJSON($json)
+{
     $ops = json_decode($json);
+
     return new TextOperation($ops);
 }
 
-function iter($iterable) {
+function iter($iterable)
+{
     if ($iterable instanceof \Iterator) {
         return $iterable;
     }
@@ -54,8 +86,9 @@ function iter($iterable) {
     throw new \InvalidArgumentException('Argument must be iterable');
 }
 
-function forward($iterator, $default = null) {
-    if (! $iterator instanceof \Iterator) {
+function forward($iterator, $default = null)
+{
+    if (!$iterator instanceof \Iterator) {
         throw new \InvalidArgumentException(sprintf(
             'Argument 1 must be an iterator, %s give', gettype($iterator)
         ));
@@ -63,6 +96,7 @@ function forward($iterator, $default = null) {
     if ($iterator->valid()) {
         $value = $iterator->current();
         $iterator->next();
+
         return $value;
     }
     if ($default !== null) {

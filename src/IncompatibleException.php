@@ -1,4 +1,7 @@
 <?php
+
 namespace TextOperation;
 
-class IncompatibleException extends \Exception {}
+class IncompatibleException extends \Exception
+{
+}
